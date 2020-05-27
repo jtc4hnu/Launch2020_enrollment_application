@@ -1,0 +1,8 @@
+.userInputField > * {
+    margin: 10px;
+    min-width: 200px;
+}
+
+.SignIn > *, .CreateAccount > *{
+    margin: 16px;
+}
