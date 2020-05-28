@@ -6,6 +6,8 @@ class DataDisplay extends Component {
         super(props);
 
         this.state = {
+            addingTeacher: false,
+            addingStudent: false,
             privilege: "STUDENT",
             teachers: [],
             students: []
@@ -14,8 +16,7 @@ class DataDisplay extends Component {
 
     componentDidMount() {
         this.GetPrivilege();
-        this.GetCollection("TEACHERS");
-        this.GetCollection("STUDENTS");
+        this.GetCollections();
     }
 
     GetPrivilege = () => {
@@ -25,18 +26,43 @@ class DataDisplay extends Component {
             })
         })
     }
-    GetCollection(collection) {
-        this.props.database.collection(collection).get()
-            .then(snapshot => {
-                let users = []
+    GetCollections() {
 
-                users.push(snapshot.docs.map(doc => {
-                    return doc.data();
-                }))
+        this.props.database.collection("Teachers").get()
+            .then((querySnapshot) => {
+                let teacherDatabase = [];
 
-                this.state[collection.toLowerCase()] = users
-                this.setState(this.state)
-            })
+                querySnapshot.forEach((doc) => {
+                    const teacher = doc.data()
+                    teacher.id = doc.id;
+                    teacherDatabase.push(teacher);
+                });
+
+                this.setState({
+                    teachers: teacherDatabase
+                })
+
+            });
+
+        this.props.database.collection("Students").get()
+            .then((querySnapshot) => {
+                let studentDatabase = [];
+
+                querySnapshot.forEach((doc) => {
+                    const student = doc.data()
+                    student.id = doc.id;
+                    studentDatabase.push(student);
+                });
+
+                this.setState({
+                    students: studentDatabase
+                })
+            });
+
+
+
+        //this.state[collection.toLowerCase()] = users
+        this.setState(this.state)
     }
 
     GenerateID = () => {
@@ -102,6 +128,22 @@ class DataDisplay extends Component {
                                     </tr>
                                 )
                             })
+                        }
+                        {
+                            this.state.addingStudent ?
+                                <tr>
+                                    <td><input placeholder="Student Name" /></td>
+                                    <td><input placeholder="Student Email" /></td>
+                                    <td><input value={"Generated Key"} /></td>
+                                </tr>
+                                :
+                                this.state.privilege === "Teacher" ||
+                                this.state.privilege === "ADMIN" &&
+                                <tr>
+                                    <td><button onClick={() => this.setState({
+                                        addingStudent: true
+                                    })}>Add Student</button></td>
+                                </tr>
                         }
                     </tbody>
                 </table>
