@@ -84,7 +84,6 @@ class DataDisplay extends Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <div>
                 <table className="Teachers">
@@ -93,6 +92,7 @@ class DataDisplay extends Component {
                             <th>Teacher Name</th>
                             <th>Teacher Email</th>
                             <th>Teacher ID</th>
+                            <th colSpan="6">Classes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,9 +103,30 @@ class DataDisplay extends Component {
                                         <td>{teacher.name}</td>
                                         <td>{teacher.email}</td>
                                         <td>{teacher.id}</td>
+                                        {
+                                            teacher.classes.map(course => {
+                                                return <td><button>{course}</button></td>
+                                            })
+                                        }
+                                        <td><button>Add Course</button></td>
                                     </tr>
                                 )
                             })
+                        }
+                        {
+                            this.state.addingTeacher ?
+                                <tr>
+                                    <td><input placeholder="Teacher Name" /></td>
+                                    <td><input placeholder="Teacher Email" /></td>
+                                    <td><button>Create Teacher</button></td>
+                                </tr>
+                                :
+                                this.state.privilege === "ADMIN" &&
+                                <tr>
+                                    <td><button onClick={() => this.setState({
+                                        addingTeacher: true
+                                    })}>Add Teacher</button></td>
+                                </tr>
                         }
                     </tbody>
                 </table>
@@ -115,16 +136,17 @@ class DataDisplay extends Component {
                             <th>Student Name</th>
                             <th>Student Email</th>
                             <th>Student ID</th>
+                            <th colSpan="6">Classes</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            this.state.students.map(teacher => {
+                            this.state.students.map(student => {
                                 return (
                                     <tr>
-                                        <td>{teacher.name}</td>
-                                        <td>{teacher.email}</td>
-                                        <td>{teacher.id}</td>
+                                        <td>{student.name}</td>
+                                        <td>{student.email}</td>
+                                        <td>{student.id}</td>
                                     </tr>
                                 )
                             })
@@ -134,10 +156,10 @@ class DataDisplay extends Component {
                                 <tr>
                                     <td><input placeholder="Student Name" /></td>
                                     <td><input placeholder="Student Email" /></td>
-                                    <td><input value={"Generated Key"} /></td>
+                                    <td><button>Create Student</button></td>
                                 </tr>
                                 :
-                                this.state.privilege === "Teacher" ||
+                                this.state.privilege === "TEACHER" ||
                                 this.state.privilege === "ADMIN" &&
                                 <tr>
                                     <td><button onClick={() => this.setState({

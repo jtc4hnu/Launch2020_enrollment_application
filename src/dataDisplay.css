@@ -9,3 +9,7 @@ th {
 td {
     width: inherit;
 }
+
+.ClassesHeader {
+    rowspan: 0;
+}
