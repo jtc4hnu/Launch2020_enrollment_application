@@ -20,8 +20,6 @@ firebase.initializeApp(
 const AUTH = firebase.auth();
 const DATABASE = firebase.firestore();
 
-AUTH.signOut();
-
 function App() {
   const [account, setAccount] = useState(false);
 
@@ -37,7 +35,7 @@ function App() {
   return (
     <div className="App">
       {account ?
-        <DataDisplay /> : <LandingPage auth={AUTH} database={DATABASE} />}
+        <DataDisplay auth={AUTH} database={DATABASE} account={account} /> : <LandingPage auth={AUTH} database={DATABASE} />}
     </div>
   );
 }

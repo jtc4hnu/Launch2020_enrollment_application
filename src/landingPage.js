@@ -7,7 +7,6 @@ class LandingPage extends Component {
         privilege: "TEACHER"
     }
 
-
     render() {
         return (
             <div>
@@ -66,11 +65,9 @@ class LandingPage extends Component {
                                                 console.log(error.code, error.message);
                                                 return;
                                             })
-                                            .then(unknown => {
-                                                console.log(unknown);
-
-                                                this.props.database.collection("Privileges").doc(this.state.privilege).set({
-
+                                            .then(apicall => {
+                                                this.props.database.collection("Privileges").doc(apicall.user.uid).set({
+                                                    privilege: this.state.privilege
                                                 })
 
                                                 this.props.auth.signInWithEmailAndPassword(
