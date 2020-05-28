@@ -16,8 +16,6 @@ function DataTable(props) {
             <tbody>
                 {
                     props.users.map(user => {
-                        console.log(user);
-
                         return (
                             <tr>
                                 <td>{user.name}</td>
@@ -25,13 +23,16 @@ function DataTable(props) {
                                 <td>{user.id}</td>
                                 {
                                     user.classes.map(course => {
-                                        return <td><button>{course}</button></td>
+                                        return <td><button onClick={() => {
+                                            props.Methods.RemoveClass(user.id, course)
+                                        }}
+                                        >{course}</button></td>
                                     })
                                 }
                                 {
                                     (props.privilege === "ADMIN" || props.privilege === "TEACHER") &&
                                     user.classes.length < 6 &&
-                                    <td><button>Add Course</button></td>
+                                    <td><button onClick={props.Methods.AddClass}>Add Course</button></td>
                                 }
                             </tr>
                         )
@@ -46,7 +47,7 @@ function DataTable(props) {
                                 const nameElem = document.getElementById("NewName");
                                 const emailElem = document.getElementById("NewEmail");
 
-                                props.CreateUser(
+                                props.Methods.CreateUser(
                                     nameElem.value,
                                     emailElem.value
                                 )
@@ -54,17 +55,6 @@ function DataTable(props) {
                                 nameElem.value = "";
                                 emailElem.value = "";
                                 setAddingUser(false);
-
-                                // this.props.auth.createUserWithEmailAndPassword(
-                                //     document.getElementById("inputEmail").value,
-                                //     process.env.REACT_APP_DEFAULT_PASSWORD
-                                // )
-                                //     .then(apicall => {
-                                //         this.props.database.collection("Privileges").doc(apicall.user.uid).set({
-                                //             privilege: "TEACHER"
-                                //         })
-                                //     })
-                                // this.GetCollections();
                             }}>Create Account</button></td>
                         </tr>
                         :

@@ -120,16 +120,46 @@ class DataDisplay extends Component {
             })
     }
 
+    RemoveClass = (collection) => {
+        return (
+            (userID, className) => {
+                console.log(this.state, userID);
+
+                this.state[collection.toLowerCase()].forEach(user => {
+                    if (user.id === userID) {
+                        user.classes.splice(user.classes.findIndex(course => course === className), 1)
+
+                        this.props.database.collection(collection).doc(userID).set(user);
+                    }
+                })
+            }
+        )
+    }
+
+    AddClass = (userID, className) => {
+
+    }
+
     render() {
         return (
             <div>
                 <div>
                     <h3>Teachers</h3>
-                    <DataTable CreateUser={this.CreateTeacher} privilege={this.state.privilege} users={this.state.teachers} />
+                    <DataTable Methods={{
+                        CreateUser: this.CreateTeacher,
+                        AddClass: this.AddClass,
+                        RemoveClass: this.RemoveClass("Teachers")
+                    }}
+                        privilege={this.state.privilege} users={this.state.teachers} />
                 </div>
                 <div>
                     <h3>Students</h3>
-                    <DataTable CreateUser={this.CreateStudent} privilege={this.state.privilege} users={this.state.students} />
+                    <DataTable Methods={{
+                        CreateUser: this.CreateStudent,
+                        AddClass: this.AddClass,
+                        RemoveClass: this.RemoveClass("Students")
+                    }}
+                        privilege={this.state.privilege} users={this.state.students} />
                 </div>
 
                 <button onClick={() =>
