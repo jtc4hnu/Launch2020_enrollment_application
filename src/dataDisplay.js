@@ -1,13 +1,13 @@
 import React, { Component } from "react";
+import DataTable from "./tableCustom.js";
 import "./dataDisplay.css";
+
 
 class DataDisplay extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            addingTeacher: false,
-            addingStudent: false,
             privilege: "STUDENT",
             teachers: [],
             students: []
@@ -27,7 +27,6 @@ class DataDisplay extends Component {
         })
     }
     GetCollections() {
-
         this.props.database.collection("Teachers").get()
             .then((querySnapshot) => {
                 let teacherDatabase = [];
@@ -59,34 +58,59 @@ class DataDisplay extends Component {
                 })
             });
 
+        this.props.database.collection("Teachers").onSnapshot(querySnapshot => {
+            let teacherDatabase = [];
+            querySnapshot.forEach(function (doc) {
+                const teacher = doc.data()
+                teacher.id = doc.id;
+                teacherDatabase.push(teacher);
+            });
+            this.setState({
+                teachers: teacherDatabase
+            })
+        });
 
-
-        //this.state[collection.toLowerCase()] = users
-        this.setState(this.state)
+        this.props.database.collection("Students").onSnapshot(querySnapshot => {
+            let studentDatabase = [];
+            querySnapshot.forEach(function (doc) {
+                const student = doc.data()
+                student.id = doc.id;
+                studentDatabase.push(student);
+            });
+            this.setState({
+                students: studentDatabase
+            })
+        });
     }
 
-    GenerateID = () => {
-        let unique = false;
-        let id = 0;
+    CreateTeacher = (name, email) => {
+        this.props.auth.createUserWithEmailAndPassword(
+            document.getElementById("inputEmail").value,
+            process.env.REACT_APP_DEFAULT_PASSWORD
+        )
+            .then(apicall => {
+                this.props.database.collection("Privileges").doc(apicall.user.uid).set({
+                    privilege: "TEACHER"
+                })
+            })
+        this.GetCollections();
+    }
 
-        while (!unique) {
-            unique = true;
-            id = Math.ceil(Math.random() * 100000);
+    CreateStudent = (name, email) => {
 
-            for (let i = 0; i < this.state.users.length; i++) {
-                if (this.state.users[i].id === id) {
-                    unique = false;
-                    break;
-                }
-            }
-        }
-        return id.toString();
     }
 
     render() {
         return (
             <div>
-                <table className="Teachers">
+                <h3>Teachers</h3>
+                <DataTable CreateUser={this.CreateTeacher} privilege={this.state.privilege} users={this.state.teachers} />
+                <h3>Students</h3>
+                <DataTable CreateUser={this.CreateStudent} privilege={this.state.privilege} users={this.state.students} />
+
+
+
+                {/* <table className="Teachers">
                     <thead>
                         <tr>
                             <th>Teacher Name</th>
@@ -116,9 +140,20 @@ class DataDisplay extends Component {
                         {
                             this.state.addingTeacher ?
                                 <tr>
-                                    <td><input placeholder="Teacher Name" /></td>
-                                    <td><input placeholder="Teacher Email" /></td>
-                                    <td><button>Create Teacher</button></td>
+                                    <td><input id="NewTeacherName" placeholder="Teacher Name" /></td>
+                                    <td><input id="NewTeacherEmail" placeholder="Teacher Email" /></td>
+                                    <td><button onClick={() => {
+                                        this.props.auth.createUserWithEmailAndPassword(
+                                            document.getElementById("inputEmail").value,
+                                            process.env.REACT_APP_DEFAULT_PASSWORD
+                                        )
+                                            .then(apicall => {
+                                                this.props.database.collection("Privileges").doc(apicall.user.uid).set({
+                                                    privilege: "TEACHER"
+                                                })
+                                            })
+                                        this.GetCollections();
+                                    }}>Create Teacher</button></td>
                                 </tr>
                                 :
                                 this.state.privilege === "ADMIN" &&
@@ -156,11 +191,22 @@ class DataDisplay extends Component {
                                 <tr>
                                     <td><input placeholder="Student Name" /></td>
                                     <td><input placeholder="Student Email" /></td>
-                                    <td><button>Create Student</button></td>
+                                    <td><button onClick={() => {
+                                        this.props.auth.createUserWithEmailAndPassword(
+                                            document.getElementById("inputEmail").value,
+                                            process.env.REACT_APP_DEFAULT_PASSWORD
+                                        )
+                                            .then(apicall => {
+                                                this.props.database.collection("Privileges").doc(apicall.user.uid).set({
+                                                    privilege: "STUDENT"
+                                                })
+                                            })
+                                        this.GetCollections();
+                                    }}>Create Student</button></td>
                                 </tr>
                                 :
-                                this.state.privilege === "TEACHER" ||
-                                this.state.privilege === "ADMIN" &&
+                                (this.state.privilege === "TEACHER" ||
+                                    this.state.privilege === "ADMIN") &&
                                 <tr>
                                     <td><button onClick={() => this.setState({
                                         addingStudent: true
@@ -168,7 +214,8 @@ class DataDisplay extends Component {
                                 </tr>
                         }
                     </tbody>
-                </table>
+                </table> */}
+
                 <button onClick={() =>
                     this.props.auth.signOut()
                 }>Sign Out</button>
