@@ -34,6 +34,15 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Thomas Jefferson Elementary School
+        {
+          account &&
+          <button className="SignOut" onClick={() =>
+            this.props.auth.signOut()
+          }>Sign Out</button>
+        }
+      </h1>
+
       {account ?
         <DataDisplay auth={AUTH} database={DATABASE} account={account} /> : <LandingPage auth={AUTH} database={DATABASE} />}
     </div>

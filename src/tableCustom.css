@@ -1,0 +1,16 @@
+tr:hover {
+border-color: #f7e75f8c;
+}
+
+th, td {
+    border: 2px solid;
+    border-color: inherit;
+    padding: 2px;
+}
+
+th {
+    width: 150px;
+}
+td {
+    width: inherit;
+}

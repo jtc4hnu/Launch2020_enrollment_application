@@ -11,7 +11,7 @@ class LandingPage extends Component {
         return (
             <div>
                 <h1>Thomas Jefferson Elementary School</h1>
-                <h2>Landing Page</h2>
+                <h3>Landing Page</h3>
                 <p>
                     {this.state.hasaccount ?
                         "If you have an account, Sign In below. Otherwise, please " :

@@ -10,7 +10,8 @@ class DataDisplay extends Component {
         this.state = {
             privilege: "STUDENT",
             teachers: [],
-            students: []
+            students: [],
+            classes: []
         }
     }
 
@@ -30,15 +31,20 @@ class DataDisplay extends Component {
         this.props.database.collection("Teachers").get()
             .then((querySnapshot) => {
                 let teacherDatabase = [];
+                let classDatabase = []
 
                 querySnapshot.forEach((doc) => {
                     const teacher = doc.data()
                     teacher.id = doc.id;
                     teacherDatabase.push(teacher);
+                    teacher.classes.forEach(course => {
+                        classDatabase.push([course, teacher.name])
+                    })
                 });
 
                 this.setState({
-                    teachers: teacherDatabase
+                    teachers: teacherDatabase,
+                    classes: classDatabase
                 })
 
             });
@@ -162,6 +168,21 @@ class DataDisplay extends Component {
                         privilege={this.state.privilege} users={this.state.students} />
                 </div>
 
+                <div>
+                    <h3>All Classes</h3>
+                    <ul>
+                        {
+                            this.state.classes.map(course => {
+                                return (
+                                    <li>
+                                        <span>{course[0]}</span><span>{course[1]}</span>
+                                    </li>
+                                )
+                            })
+                        }
+                    </ul>
+
+                </div>
                 <button onClick={() =>
                     this.props.auth.signOut()
                 }>Sign Out</button>

@@ -1,15 +1,12 @@
-th, td {
-    border: 2px solid black;
-    padding: 2px;
+li {
+    display: flex;
 }
-
-th {
-    width: 150px;
+span {
+    display: flex;
+    flex-basis: 150px;
+    border: 2px solid;
+    border-color: inherit;
 }
-td {
-    width: inherit;
-}
-
-.ClassesHeader {
-    rowspan: 0;
+span:hover {
+    border-color: #f7e75f8c;
 }

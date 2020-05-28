@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./tableCustom.css";
 
 function DataTable(props) {
     const [addingUser, setAddingUser] = useState(false);
