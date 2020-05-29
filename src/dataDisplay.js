@@ -31,7 +31,7 @@ class DataDisplay extends Component {
         this.props.database.collection("Teachers").get()
             .then((querySnapshot) => {
                 let teacherDatabase = [];
-                let classDatabase = []
+                let classDatabase = [];
 
                 querySnapshot.forEach((doc) => {
                     const teacher = doc.data()
@@ -66,13 +66,19 @@ class DataDisplay extends Component {
 
         this.props.database.collection("Teachers").onSnapshot(querySnapshot => {
             let teacherDatabase = [];
+            let classDatabase = [];
+
             querySnapshot.forEach(function (doc) {
                 const teacher = doc.data()
                 teacher.id = doc.id;
                 teacherDatabase.push(teacher);
+                teacher.classes.forEach(course => {
+                    classDatabase.push([course, teacher.name])
+                })
             });
             this.setState({
-                teachers: teacherDatabase
+                teachers: teacherDatabase,
+                classes: classDatabase
             })
         });
 
@@ -142,31 +148,52 @@ class DataDisplay extends Component {
         )
     }
 
-    AddClass = (userID, className) => {
+    AddClass = (collection, userID, className) => {
+        let info = { name: "Unknown", classes: [] }
 
+        this.state[collection.toLowerCase()].forEach(user => {
+            if (user.id === userID)
+                info = user;
+            return;
+        })
+        console.log(info);
+
+        info.classes.push(className);
+
+        this.props.database.collection(collection).doc(userID).set(
+            info
+        )
     }
 
     render() {
         return (
             <div>
-                <div>
-                    <h3>Teachers</h3>
-                    <DataTable Methods={{
+                <DataTable
+                    Methods={{
                         CreateUser: this.CreateTeacher,
                         AddClass: this.AddClass,
                         RemoveClass: this.RemoveClass("Teachers")
                     }}
-                        privilege={this.state.privilege} users={this.state.teachers} />
-                </div>
-                <div>
-                    <h3>Students</h3>
-                    <DataTable Methods={{
+                    Data={{
+                        classes: this.state.classes,
+                        privilege: this.state.privilege,
+                        users: this.state.teachers,
+                        collection: "Teachers"
+                    }} />
+                <DataTable
+                    Methods={{
                         CreateUser: this.CreateStudent,
                         AddClass: this.AddClass,
                         RemoveClass: this.RemoveClass("Students")
                     }}
-                        privilege={this.state.privilege} users={this.state.students} />
-                </div>
+                    Data={{
+                        classes: this.state.classes,
+                        privilege: this.state.privilege,
+                        users: this.state.students,
+                        collection: "Students"
+                    }}
+
+                />
 
                 <div>
                     <h3>All Classes</h3>

@@ -10,7 +10,6 @@ class LandingPage extends Component {
     render() {
         return (
             <div>
-                <h1>Thomas Jefferson Elementary School</h1>
                 <h3>Landing Page</h3>
                 <p>
                     {this.state.hasaccount ?

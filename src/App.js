@@ -37,9 +37,7 @@ function App() {
       <h1>Thomas Jefferson Elementary School
         {
           account &&
-          <button className="SignOut" onClick={() =>
-            this.props.auth.signOut()
-          }>Sign Out</button>
+          <button className="SignOut" onClick={() => AUTH.signOut()}>Sign Out</button>
         }
       </h1>
 
