@@ -183,9 +183,6 @@ class DataDisplay extends Component {
                     </ul>
 
                 </div>
-                <button onClick={() =>
-                    this.props.auth.signOut()
-                }>Sign Out</button>
             </div >
         )
     }
