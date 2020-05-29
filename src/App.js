@@ -25,7 +25,8 @@ function App() {
 
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      setAccount(user.uid);
+      console.log(user, user.email);
+      setAccount(user);
     }
     else {
       setAccount(false);
@@ -34,15 +35,35 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Thomas Jefferson Elementary School
+      <header>
         {
           account &&
-          <button className="SignOut" onClick={() => AUTH.signOut()}>Sign Out</button>
-        }
-      </h1>
+          <div className="SignOut">
+            <div>{account.email}</div>
 
-      {account ?
-        <DataDisplay auth={AUTH} database={DATABASE} account={account} /> : <LandingPage auth={AUTH} database={DATABASE} />}
+            <button onClick={() => AUTH.signOut()}> Sign Out</button>
+          </div>
+        }
+        <b>Thomas Jefferson Elementary</b>
+        {
+          account ?
+            <div>School Database</div>
+            :
+            <div>Sign in Page</div>
+        }
+      </header>
+
+      {
+        account ?
+          <DataDisplay auth={AUTH} database={DATABASE} account={account.uid} />
+          :
+          <LandingPage auth={AUTH} database={DATABASE} />
+      }
+
+      <footer>
+        <div>About</div>
+        <div>Other</div>
+      </footer>
     </div>
   );
 }

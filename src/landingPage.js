@@ -10,7 +10,6 @@ class LandingPage extends Component {
     render() {
         return (
             <div>
-                <h3>Landing Page</h3>
                 <p>
                     {this.state.hasaccount ?
                         "If you have an account, Sign In below. Otherwise, please " :
@@ -79,7 +78,6 @@ class LandingPage extends Component {
                             }}>Create Account</button>
                         </div>
                 }
-
             </div >
         )
     }

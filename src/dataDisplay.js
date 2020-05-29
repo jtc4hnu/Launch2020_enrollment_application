@@ -1,7 +1,11 @@
 import React, { Component } from "react";
-import DataTable from "./tableCustom.js";
-import "./dataDisplay.css";
 
+import TeacherTable from "./tableTeachers.js";
+import StudentTable from "./tableStudents.js";
+import CoursesTable from "./tableCourses.js";
+
+import "./dataDisplay.css";
+import "./tableCustom.css";
 
 class DataDisplay extends Component {
     constructor(props) {
@@ -17,7 +21,47 @@ class DataDisplay extends Component {
 
     componentDidMount() {
         this.GetPrivilege();
-        this.GetCollections();
+        this.GetTeachers();
+        this.GetStudents();
+
+        this.props.database.collection("Teachers").onSnapshot(querySnapshot => {
+            let teacherDatabase = [];
+
+            querySnapshot.forEach(function (doc) {
+                const teacher = doc.data()
+                teacher.id = doc.id;
+                teacherDatabase.push(teacher);
+            });
+            this.setState({
+                teachers: teacherDatabase
+            }, () => this.GetClasses())
+        });
+        this.props.database.collection("Students").onSnapshot(querySnapshot => {
+            let studentDatabase = [];
+
+            querySnapshot.forEach(function (doc) {
+                const student = doc.data()
+                student.id = doc.id;
+                studentDatabase.push(student);
+            });
+
+            this.setState({
+                students: studentDatabase
+            }, () => this.GetClasses())
+        });
+        this.props.database.collection("Students").onSnapshot(querySnapshot => {
+            let classDatabase = [];
+
+            querySnapshot.forEach((doc) => {
+                const course = doc.data()
+                course.number = doc.id;
+                classDatabase.push(course);
+            });
+
+            this.setState({
+                classes: classDatabase
+            })
+        });
     }
 
     GetPrivilege = () => {
@@ -27,28 +71,24 @@ class DataDisplay extends Component {
             })
         })
     }
-    GetCollections() {
+    GetTeachers() {
         this.props.database.collection("Teachers").get()
             .then((querySnapshot) => {
                 let teacherDatabase = [];
-                let classDatabase = [];
 
                 querySnapshot.forEach((doc) => {
                     const teacher = doc.data()
                     teacher.id = doc.id;
                     teacherDatabase.push(teacher);
-                    teacher.classes.forEach(course => {
-                        classDatabase.push([course, teacher.name])
-                    })
                 });
 
                 this.setState({
-                    teachers: teacherDatabase,
-                    classes: classDatabase
-                })
+                    teachers: teacherDatabase
+                }, () => this.GetClasses())
 
             });
-
+    }
+    GetStudents() {
         this.props.database.collection("Students").get()
             .then((querySnapshot) => {
                 let studentDatabase = [];
@@ -61,38 +101,26 @@ class DataDisplay extends Component {
 
                 this.setState({
                     students: studentDatabase
-                })
+                }, () => this.GetClasses())
+            });
+    }
+    GetClasses() {
+        this.props.database.collection("Classes").get()
+            .then((querySnapshot) => {
+                let classDatabase = [];
+
+                querySnapshot.forEach((doc) => {
+                    const course = doc.data()
+                    course.number = doc.id;
+                    classDatabase.push(course);
+                });
+
+                this.setState({
+                    classes: classDatabase
+                }, () => console.log(this.state))
             });
 
-        this.props.database.collection("Teachers").onSnapshot(querySnapshot => {
-            let teacherDatabase = [];
-            let classDatabase = [];
 
-            querySnapshot.forEach(function (doc) {
-                const teacher = doc.data()
-                teacher.id = doc.id;
-                teacherDatabase.push(teacher);
-                teacher.classes.forEach(course => {
-                    classDatabase.push([course, teacher.name])
-                })
-            });
-            this.setState({
-                teachers: teacherDatabase,
-                classes: classDatabase
-            })
-        });
-
-        this.props.database.collection("Students").onSnapshot(querySnapshot => {
-            let studentDatabase = [];
-            querySnapshot.forEach(function (doc) {
-                const student = doc.data()
-                student.id = doc.id;
-                studentDatabase.push(student);
-            });
-            this.setState({
-                students: studentDatabase
-            })
-        });
     }
 
     CreateTeacher = (name, email) => {
@@ -168,9 +196,10 @@ class DataDisplay extends Component {
     render() {
         return (
             <div>
-                <DataTable
+
+                <TeacherTable
                     Methods={{
-                        CreateUser: this.CreateTeacher,
+                        CreateTeacher: this.CreateTeacher,
                         AddClass: this.AddClass,
                         RemoveClass: this.RemoveClass("Teachers")
                     }}
@@ -179,8 +208,9 @@ class DataDisplay extends Component {
                         privilege: this.state.privilege,
                         users: this.state.teachers,
                         collection: "Teachers"
-                    }} />
-                <DataTable
+                    }}
+                />
+                <StudentTable
                     Methods={{
                         CreateUser: this.CreateStudent,
                         AddClass: this.AddClass,
@@ -192,24 +222,17 @@ class DataDisplay extends Component {
                         users: this.state.students,
                         collection: "Students"
                     }}
-
                 />
 
-                <div>
-                    <h3>All Classes</h3>
-                    <ul>
-                        {
-                            this.state.classes.map(course => {
-                                return (
-                                    <li>
-                                        <span>{course[0]}</span><span>{course[1]}</span>
-                                    </li>
-                                )
-                            })
-                        }
-                    </ul>
-
-                </div>
+                <CoursesTable
+                    Methods={{
+                        RemoveClass: this.RemoveClass("Students")
+                    }}
+                    Data={{
+                        classes: this.state.classes,
+                        privilege: this.state.privilege
+                    }}
+                />
             </div >
         )
     }

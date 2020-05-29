@@ -1,16 +1,35 @@
+button {
+    cursor: pointer;
+}
+
 tr:hover {
 border-color: #f7e75f8c;
 }
 
 th, td {
     border: 2px solid;
-    border-color: inherit;
     padding: 2px;
+    
+    min-width: 150px;
 }
 
-th {
-    width: 150px;
-}
 td {
-    width: inherit;
+    border-color: inherit;
+}
+
+.CustomTable {
+    margin: 25px 5%;
+}
+.CustomTable > h3 {
+    margin: 10px 0 5px 0;
+}
+
+.CustomTable > *:hover {
+    cursor: default;
+}
+
+.ScrollableTable {
+    border: 2px solid black;
+    overflow: auto;
+    padding: 5px;
 }
