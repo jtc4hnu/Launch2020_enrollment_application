@@ -60,7 +60,7 @@ function TeacherTable(props) {
                                         }
 
                                         {
-                                            (props.Data.privilege === "ADMIN" || props.Data.privilege === "TEACHER") &&
+                                            props.Data.privilege === "ADMIN" &&
                                             <td>
                                                 <form onSubmit={e => {
                                                     e.preventDefault();
@@ -92,8 +92,7 @@ function TeacherTable(props) {
                             })
                         }
                         {
-                            props.Data.privilege === "ADMIN" &&
-                                addingTeacher ?
+                            addingTeacher ?
                                 <tr>
                                     <td><input id="TeacherName" placeholder="Name" /></td>
                                     <td><input id="TeacherEmail" type="email" placeholder="Email" /></td>
@@ -112,6 +111,7 @@ function TeacherTable(props) {
                                     }}>Create Account</button></td>
                                 </tr>
                                 :
+                                props.Data.privilege === "ADMIN" &&
                                 <tr>
                                     <td><button onClick={() => setAddingTeacher(true)}>Add Teacher</button></td>
                                 </tr>
