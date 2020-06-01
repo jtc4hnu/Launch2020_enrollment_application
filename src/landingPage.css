@@ -7,6 +7,7 @@
     margin: 16px;
 }
 
-.Push{
-    min-height: 1000px;
+.CreateAccount, .SignIn {
+    overflow: hidden;
+    height: 100%;
 }

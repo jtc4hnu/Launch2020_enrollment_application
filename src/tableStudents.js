@@ -6,7 +6,7 @@ function DataTable(props) {
 
     return (
         <div className="CustomTable">
-            <h3>{props.Data.collection}</h3>
+            <h3>Students</h3>
             <div className="ScrollableTable">
                 <table>
                     <thead>
@@ -116,7 +116,7 @@ function DataTable(props) {
                                 :
                                 props.Data.privilege === "ADMIN" &&
                                 <tr>
-                                    <td><button onClick={() => setAddingUser(true)}>Add Element</button></td>
+                                    <td><button onClick={() => setAddingUser(true)}>Add Student</button></td>
                                 </tr>
                         }
                     </tbody>

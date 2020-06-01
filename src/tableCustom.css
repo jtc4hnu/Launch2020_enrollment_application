@@ -1,6 +1,9 @@
 button {
     cursor: pointer;
 }
+button:hover {
+    border-color: #005500;
+}
 
 table {
     margin-left: auto;

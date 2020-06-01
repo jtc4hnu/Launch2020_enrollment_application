@@ -21,9 +21,17 @@ class LandingPage extends Component {
                 </p>
 
                 <div className="userInputField">
-                    <input id="inputEmail" type="email" placeholder="Enter your Email" />
-                    <input id="inputPassword" type="password" placeholder="Enter your password" />
-                    {!this.state.hasaccount && <input id="confirmPassword" type="password" placeholder="Confirm your password" />}
+                    <div><input id="inputEmail" type="email" placeholder="Enter your Email" /></div>
+
+                    <div><input id="inputPassword" type="password" placeholder="Enter your password" /></div>
+
+                    {
+                        !this.state.hasaccount &&
+                        <div>
+                            <input id="confirmPassword" type="password" placeholder="Confirm your password" />
+                        </div>
+                    }
+
                 </div>
                 {
                     this.state.hasaccount ?

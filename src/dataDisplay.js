@@ -169,6 +169,11 @@ class DataDisplay extends Component {
 
     CreateStudent = (name, email, parentEmail) => {
         this.props.auth2.createUserWithEmailAndPassword(
+            parentEmail,
+            process.env.REACT_APP_DEFAULT_PASSWORD
+        );
+
+        this.props.auth2.createUserWithEmailAndPassword(
             email,
             process.env.REACT_APP_DEFAULT_PASSWORD
         )

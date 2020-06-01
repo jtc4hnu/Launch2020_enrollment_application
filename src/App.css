@@ -1,9 +1,11 @@
 html, body, #root, .App {
   height: 100%;
+  overflow: hidden;
 }
 
 .App {
   text-align: center;
+  background-color: #b195e433;
 }
 
 .App-logo {
@@ -44,8 +46,9 @@ header > div{
 footer {
   position: -webkit-sticky;
   position: sticky;
-  top: 99%;
+  top: 96%;
   bottom: 0;
+  padding: -10px 0;
 
   display: flex;
 }

@@ -64,8 +64,14 @@ function App() {
       }
 
       <footer>
-        <div>About</div>
-        <div>Other</div>
+        <div>
+          <div>School Phone: 434-TOM-JEFF</div>
+          <div>School Email: tjes@tjes.k12.va.us</div>
+        </div>
+
+        <div>
+          <div>Site Issues? Contact jtc4hnu@virginia.edu</div>
+        </div>
       </footer>
     </div>
   );
