@@ -18,19 +18,22 @@ firebase.initializeApp(
   }
 );
 const AUTH = firebase.auth();
+const AUTH2 = firebase.initializeApp({
+  apiKey: process.env.REACT_APP_DatabaseAPIKey,
+  authDomain: process.env.REACT_APP_AuthDomain,
+  databaseURL: process.env.REACT_APP_DataBaseURL,
+  projectId: process.env.REACT_APP_ProjectID,
+  storageBucket: process.env.REACT_APP_StorageBucket,
+  messagingSenderId: process.env.REACT_APP_MessageSenderID,
+  appId: process.env.REACT_APP_AppID
+}, "Secondary").auth();
 const DATABASE = firebase.firestore();
 
 function App() {
   const [account, setAccount] = useState(false);
 
   firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      console.log(user, user.email);
-      setAccount(user);
-    }
-    else {
-      setAccount(false);
-    }
+    setAccount(user ? user : false);
   })
 
   return (
@@ -55,7 +58,7 @@ function App() {
 
       {
         account ?
-          <DataDisplay auth={AUTH} database={DATABASE} account={account.uid} />
+          <DataDisplay auth2={AUTH2} database={DATABASE} account={account.uid} />
           :
           <LandingPage auth={AUTH} database={DATABASE} />
       }

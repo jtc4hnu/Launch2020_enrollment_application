@@ -15,3 +15,8 @@ span {
 span:hover {
     border-color: #f7e75f8c;
 }
+
+.Database {
+    padding: 5px 0;
+  background-color: #b195e433;
+}

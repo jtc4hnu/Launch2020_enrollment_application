@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./tableCustom.css";
 
 function CourseTable(props) {
     const [addingClass, setAddingClass] = useState(false);
@@ -7,95 +6,85 @@ function CourseTable(props) {
     return (
         <div className="CustomTable">
             <h3>Courses</h3>
-            <div className="ScrollableTable">
+            <div className="FixedTable">
                 <table>
                     <thead>
                         <tr>
                             <th>Course Title</th>
-                            <th>Course Abbreviation</th>
                             <th>Course Numeric</th>
                             <th>Start Time</th>
                             <th>End Time</th>
+                            <th>Assigned Teacher</th>
+                            <th>Assigned Students</th>
+                            {props.Data.privilege === "ADMIN" &&
+                                <th>Remove Class</th>}
                         </tr>
                     </thead>
                     <tbody>
                         {
                             props.Data.classes.map(course => {
                                 return (
-                                    <tr>
+                                    <tr key={course.number}>
                                         <td>{course.title}</td>
-                                        <td>{course.abbrev}</td>
                                         <td>{course.number}</td>
                                         <td>{course.start}</td>
                                         <td>{course.end}</td>
+                                        <td>{course.teacher}</td>
+                                        <td className="Student-Listing">
+                                            {course.students.map(student => {
+                                                return <div key={student} >
+                                                    {student}
+                                                </div>
+                                            })}
+                                        </td>
+                                        {
+                                            props.Data.privilege === "ADMIN" &&
+                                            <td className="Caution"><button onClick={() => {
+                                                props.Methods.DeleteClass(course)
+                                            }}>Delete This Class</button></td>
+                                        }
                                     </tr>
                                 )
                             })
                         }
-                        {/* {
-                                        {
-                                            user.classes.map(course => {
-                                                return (
-                                                    <td key={course}>
-                                                        {
-                                                            (props.Data.privilege === "ADMIN" || props.Data.privilege === "TEACHER") ?
-                                                                <button onClick={() => {
-                                                                    props.Methods.RemoveClass(user.id, course)
-                                                                }}>{course}</button>
-                                                                :
-                                                                <text>{course}</text>
-                                                        }
-                                                    </td>
-                                                )
-                                            })
-                                        }
-                                        {
-                                            (props.Data.privilege === "ADMIN" || props.Data.privilege === "TEACHER") &&
-                                            <td>
-                                                <form onSubmit={e => {
-                                                    e.preventDefault();
-                                                    props.Methods.AddClass(
-                                                        props.Data.collection,
-                                                        user.id,
-                                                        e.target.firstElementChild.value
-                                                    )
-                                                    e.target.firstElementChild.value = "";
-                                                }}>
-                                                    <input type="text" placeholder="Add a Class" list="Classes" />
-                                                </form>
-
-                                                <datalist id="Classes">
-                                                    {props.Data.classes.map(course => {
-                                                        return (
-                                                            <option>{course[0]}</option>
-                                                        )
-                                                    })}
-                                                </datalist>
-                                            </td>
-                                        }
-                                    </tr>
-                                )
-                            })
-                        } */}
                         {
                             addingClass ?
                                 <tr>
-                                    <td><input id="NewTitle" placeholder="Name" /></td>
-                                    <td><input id="NewAbbrev" type="email" placeholder="Email" /></td>
+                                    <td><input id="CourseTitle" placeholder="Class Title" /></td>
+                                    <td><input id="CourseID" placeholder="Unique ID" /></td>
+                                    <td><input id="CourseStart" placeholder="Start Time" /></td>
+                                    <td><input id="CourseEnd" placeholder="End Time" /></td>
+                                    <td><input id="CourseTeacher" placeholder="Assigned Teacher" /></td>
+                                    <td>{" "}</td>
                                     <td><button onClick={() => {
-                                        const nameElem = document.getElementById("NewName");
-                                        const emailElem = document.getElementById("NewEmail");
 
-                                        nameElem.value = "";
-                                        emailElem.value = "";
+                                        const titleElem = document.getElementById("CourseTitle");
+                                        const idElem = document.getElementById("CourseID");
+                                        const teacherElem = document.getElementById("CourseTeacher");
+                                        const startElem = document.getElementById("CourseStart");
+                                        const endElem = document.getElementById("CourseEnd");
+
+                                        props.Methods.AddClass({
+                                            title: titleElem.value,
+                                            start: startElem.value,
+                                            end: endElem.value,
+                                            teacher: teacherElem.value === "" ? "Not Assigned" : teacherElem.value,
+                                            students: []
+                                        }, idElem.value)
+
+                                        titleElem.value = "";
+                                        idElem.value = "";
+                                        teacherElem.value = "";
+                                        startElem.value = "";
+                                        endElem.value = "";
                                         setAddingClass(false);
-                                    }}>Create Account</button></td>
+                                    }}>Create Class</button></td>
                                 </tr>
                                 :
                                 props.Data.privilege === "ADMIN" &&
                                 <tr>
                                     <td>
-                                        <button onClick={() => setAddingClass(true)}>Add Element</button>
+                                        <button onClick={() => setAddingClass(true)}>Add Class</button>
                                     </td>
                                 </tr>
                         }

@@ -14,7 +14,12 @@ function TeacherTable(props) {
                             <th>Name</th>
                             <th>Email</th>
                             <th>ID</th>
+                            {
+                                props.Data.privilege === "ADMIN" &&
+                                <th>Remove Teacher</th>
+                            }
                             <th colSpan={columnSpan}>Classes</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -24,45 +29,59 @@ function TeacherTable(props) {
                                     setColSpan(user.classes.length + 1);
 
                                 return (
-                                    <tr>
+                                    <tr key={user.id}>
                                         <td>{user.name}</td>
                                         <td>{user.email}</td>
                                         <td>{user.id}</td>
+                                        {
+                                            props.Data.privilege === "ADMIN" &&
+                                            <td className="Caution">
+                                                <button onClick={() => {
+                                                    props.Methods.DeleteTeacher(user);
+                                                }}>Remove This Teacher</button>
+                                            </td>
+                                        }
+
                                         {
                                             user.classes.map(course => {
                                                 return (
                                                     <td key={course}>
                                                         {
-                                                            (props.Data.privilege === "ADMIN" || props.Data.privilege === "TEACHER") ?
+                                                            props.Data.privilege === "ADMIN" ?
                                                                 <button onClick={() => {
-                                                                    props.Methods.RemoveClass(user.id, course)
+                                                                    props.Methods.RemoveTeacher(user, course)
                                                                 }}>{course}</button>
                                                                 :
-                                                                <text>{course}</text>
+                                                                <div>{course}</div>
                                                         }
                                                     </td>
                                                 )
                                             })
                                         }
+
                                         {
                                             (props.Data.privilege === "ADMIN" || props.Data.privilege === "TEACHER") &&
                                             <td>
                                                 <form onSubmit={e => {
                                                     e.preventDefault();
-                                                    props.Methods.AddClass(
-                                                        props.Data.collection,
-                                                        user.id,
+                                                    props.Methods.AssignTeacher(
+                                                        user,
                                                         e.target.firstElementChild.value
                                                     )
                                                     e.target.firstElementChild.value = "";
                                                 }}>
-                                                    <input type="text" placeholder="Add a Class" list="Classes" />
+                                                    <input type="text" placeholder="Add a Class" list="ClassesT" />
                                                 </form>
 
-                                                <datalist id="Classes">
+                                                <datalist id="ClassesT">
                                                     {props.Data.classes.map(course => {
                                                         return (
-                                                            <option key={course[0]}>{course[0]}</option>
+                                                            <option key={course.number + "T"}>{course.title}</option>
+                                                        )
+                                                    })}
+                                                    {props.Data.classes.map(course => {
+                                                        return (
+                                                            <option key={course.number + "N"}>{course.number}</option>
                                                         )
                                                     })}
                                                 </datalist>

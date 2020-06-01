@@ -2,6 +2,10 @@ button {
     cursor: pointer;
 }
 
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
 tr:hover {
 border-color: #f7e75f8c;
 }
@@ -11,6 +15,7 @@ th, td {
     padding: 2px;
     
     min-width: 150px;
+    min-height: 28px;
 }
 
 td {
@@ -28,8 +33,24 @@ td {
     cursor: default;
 }
 
-.ScrollableTable {
+.ScrollableTable, .FixedTable {
+    background-color: white;
     border: 2px solid black;
-    overflow: auto;
     padding: 5px;
+    max-height: 100%;
+}
+.ScrollableTable {   
+    overflow: auto;
+}
+
+.Student-Listing {
+    display: flex;
+    flex-wrap: wrap;
+}
+.Student-Listing > * {
+    margin: 10px;
+}
+
+.Caution {
+    background-color: #44000044;
 }
